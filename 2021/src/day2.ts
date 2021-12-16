@@ -3,38 +3,35 @@ import { loadInputSync } from "./helpers";
 const instructions = loadInputSync(2, false);
 
 function part1() {
-  let horizontalPos = 0;
-  let depthPos = 0;
+  const [horizontalPos, depthPos] = instructions.reduce(
+    ([horizontalPos, depthPos], instruction) => {
+      const [command, strAmount] = instruction.trim().split(" ");
+      const amount = Number(strAmount);
 
-  instructions.forEach(instruction => {
-    const [command, strAmount] = instruction.trim().split(" ");
-    const amount = Number(strAmount);
+      if ("forward" === command) return [horizontalPos + amount, depthPos];
+      if ("down" === command) return [horizontalPos, depthPos + amount];
 
-    if ("forward" === command) horizontalPos += amount;
-    if ("down" === command) depthPos += amount;
-    if ("up" === command) depthPos -= amount;
-  });
+      return [horizontalPos, depthPos - amount];
+    },
+    [0, 0]
+  );
 
   console.log(`Day 2, part 1: final horizontal is ${horizontalPos}, depth is ${depthPos}. Answer is ${horizontalPos * depthPos}`);
 }
 
 function part2() {
-  let horizontalPos = 0;
-  let depthPos = 0;
-  let aim = 0;
+  const [horizontalPos, depthPos, _] = instructions.reduce(
+    ([horizontalPos, depthPos, aim], instruction) => {
+      const [command, strAmount] = instruction.trim().split(" ");
+      const amount = Number(strAmount);
 
-  instructions.forEach(instruction => {
-    const [command, strAmount] = instruction.trim().split(" ");
-    const amount = Number(strAmount);
+      if ("forward" === command) return [horizontalPos + amount, depthPos + aim * amount, aim];
+      if ("down" === command) return [horizontalPos, depthPos, aim + amount];
 
-    if ("forward" === command) {
-      horizontalPos += amount;
-      depthPos += aim * amount;
-    }
-
-    if ("down" === command) aim += amount;
-    if ("up" === command) aim -= amount;
-  });
+      return [horizontalPos, depthPos, aim - amount];
+    },
+    [0, 0, 0]
+  );
 
   console.log(`Day 2, part 2: final horizontal is ${horizontalPos}, depth is ${depthPos}. Answer is ${horizontalPos * depthPos}`);
 }
